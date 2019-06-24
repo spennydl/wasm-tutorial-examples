@@ -1,0 +1,11 @@
+[package]
+name = "wasm-tutorial"
+version = "0.1.0"
+authors = ["Spencer Leslie <spencerdleslie@gmail.com>"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+
+[dependencies]
