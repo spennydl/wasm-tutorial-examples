@@ -1,16 +1,16 @@
-use std::ffi::CString;
-use std::os::raw::c_char;
-
 // We are certain that our string doesn't have 0 bytes in the middle,
 // so we can .expect()
 // Import the `window.alert` function from the Web.
 extern {
-    fn alert(s: &str);
+    fn alert(ptr: *const u8, len: u8);
 }
 
 // Export a `greet` function from Rust to JavaScript, that alerts a
 // hello message.
 #[no_mangle]
 pub extern fn greet() {
-    unsafe { alert("hello world") };
+    let message = String::from("Hello world");
+    unsafe {
+        alert(message.as_ptr(), message.len() as u8);
+    }
 }

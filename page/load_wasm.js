@@ -1,7 +1,19 @@
 (function() {
+    let wasm;
+
+    function __alert(ptr, len) {
+        let mem = new Uint8Array(wasm.memory.buffer);
+        let decoder = new TextDecoder('utf-8');
+
+        let slice = mem.subarray(ptr, ptr + len);
+        let str = decoder.decode(slice);
+
+        alert(str);
+    }
+
     var import_obj = {
         env: {
-            alert: alert,
+            alert: __alert,
         },
     };
 
@@ -10,7 +22,8 @@
     ).then(bytes =>
       WebAssembly.instantiate(bytes, import_obj)
     ).then(results => {
+        wasm = results.instance.exports;
         console.log(results);
-      results.instance.exports.greet();
+        wasm.greet();
     });
 })();
