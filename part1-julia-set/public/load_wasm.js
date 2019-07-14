@@ -1,16 +1,6 @@
 (function() {
     let wasm;
 
-    function __alert(ptr, len) {
-        let mem = new Uint8Array(wasm.memory.buffer);
-        let decoder = new TextDecoder('utf-8');
-
-        let slice = mem.subarray(ptr, ptr + len);
-        let str = decoder.decode(slice);
-
-        alert(str);
-    }
-
     function call_greet(name) {
         let heap_base = wasm.__heap_base;
         let heap_len = wasm.memory.buffer.byteLength - heap_base;
@@ -23,11 +13,19 @@
         wasm.greet(ptr, encoder_result.written);
     }
 
-    var import_obj = {
-        env: {
-            alert: __alert,
-        },
-    };
+    function julia_set() {
+        let dim = 800;
+        let ptr = wasm.init_image(dim);
+        wasm.julia_set(ptr, dim);
+
+        let data = new Uint8ClampedArray(wasm.memory.buffer, ptr, dim * dim * 4);
+        let image_data = new ImageData(data, dim, dim);
+
+        let canvas = document.getElementById("the-canvas");
+        let ctx = canvas.getContext('2d');
+
+        ctx.putImageData(image_data, 0, 0);
+    }
 
     fetch('wasm_tutorial.wasm').then(response =>
       response.arrayBuffer()
@@ -37,6 +35,7 @@
         wasm = results.instance.exports;
         console.log(results);
 
-        call_greet("derpy dooo");
+        //call_greet("derpy dooo");
+        julia_set();
     });
 })();

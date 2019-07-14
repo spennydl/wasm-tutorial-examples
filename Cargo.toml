@@ -1,8 +1,7 @@
-[package]
-name = "wasm-tutorial"
-version = "0.1.0"
-authors = ["Spencer Leslie <spencerdleslie@gmail.com>"]
-edition = "2018"
-
-[lib]
-crate-type = ["cdylib", "rlib"]
+[workspace]
+members = [
+    "part1-broken-alert",
+    "part1-working-alert",
+    "part1-custom-alert",
+    "part1-julia-set"
+]
