@@ -62,7 +62,7 @@ pub extern fn julia_set(raw_data: *mut u8, dim: usize) {
             // Do the calculation.
             while iterations < 255 {
                 next = next.squared().add(c);
-                if next.magnitude() > 2000.0 {
+                if next.magnitude() > 250.0 {
                     break;
                 }
                 iterations += 1;

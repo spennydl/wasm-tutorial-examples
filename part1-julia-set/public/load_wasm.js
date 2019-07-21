@@ -20,18 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 (function() {
     let wasm;
 
-    function call_greet(name) {
-        let heap_base = wasm.__heap_base;
-        let heap_len = wasm.memory.buffer.byteLength - heap_base;
-        let ptr = heap_len / 2;
-        let mem = new Uint8Array(wasm.memory.buffer, ptr);
-
-        let encoder = new TextEncoder('utf-8')
-        let encoder_result = encoder.encodeInto(name, mem);
-
-        wasm.greet(ptr, encoder_result.written);
-    }
-
     function julia_set() {
         let dim = 800;
         let ptr = wasm.init_image(dim);
@@ -46,7 +34,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         ctx.putImageData(image_data, 0, 0);
     }
 
-    fetch('wasm_tutorial.wasm').then(response =>
+    let import_obj = {};
+
+    fetch('part1_julia_set.wasm').then(response =>
       response.arrayBuffer()
     ).then(bytes =>
       WebAssembly.instantiate(bytes, import_obj)
@@ -54,7 +44,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         wasm = results.instance.exports;
         console.log(results);
 
-        //call_greet("derpy dooo");
         julia_set();
     });
 })();
